@@ -7,14 +7,8 @@
     "node": "24.15"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js",
-    "vercel-build": "echo 'Building...'"
+    "start": "node app.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "cloudinary": "^2.10.0",
     "connect-flash": "^0.1.1",
