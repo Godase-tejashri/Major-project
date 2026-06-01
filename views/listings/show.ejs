@@ -1,0 +1,228 @@
+<% layout("/layouts/boilerplate") %>
+<div class="container mt-4 mb-5">
+  <div class="row">
+    <div class="col-8 offset-2">
+      <h2 class="fw-bold mb-3"><%= listing.title %></h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-8 offset-2">
+      <div class="card show-card border-0 shadow-sm rounded-3">
+        <img 
+          src="<%= listing.image.url %>" 
+          class="card-img-top show-img rounded-3 object-cover" 
+          alt="listing_image" 
+          style="max-height: 400px; width: 100%; object-fit: cover;"
+        />
+        <div class="card-body px-0 py-3">
+          <p class="card-text text-muted mb-2">owned by 
+            <i><%= listing.owner?.username || "Unknown Owner" %></i>
+          </p>
+          <p class="card-text fs-5 mb-3"><%= listing.description %></p>
+          <p class="card-text fw-bold fs-4 text-dark mb-1">
+            &#8377; <%= listing.price.toLocaleString("en-IN") %>
+          </p>
+          <p class="card-text text-secondary">
+            <i class="bi bi-geo-alt-fill me-1"></i><%= listing.location %>, <%= listing.country %>
+          </p>
+        </div>
+      </div>
+      <br>
+<% if(typeof currentUser !== "undefined" && currentUser) { %>
+    <div class="btns mb-5 d-flex gap-2">
+        <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark edit-btn px-4">Edit</a>
+        
+        <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST" class="d-inline">
+            <button class="btn btn-dark px-4">Delete</button>
+        </form>
+    </div>
+<% } %>
+
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-8 offset-2">
+      <hr>
+      
+      <% if(typeof currentUser !== "undefined" && currentUser) { %>
+      <h4 class="fw-semibold mb-3">Add Review</h4>
+      
+      <form action="/listings/<%= listing._id %>/reviews" method="POST" class="needs-validation mb-5 card p-4 shadow-sm border-0 bg-light" novalidate>
+        
+        <div class="mb-3">
+          <label class="form-label fw-medium">Rating</label>
+          <fieldset class="starability-slot">
+            <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+            <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+            <label for="first-rate1" title="Terrible">1 star</label>
+            <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+            <label for="first-rate2" title="Not good">2 stars</label>
+            <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+            <label for="first-rate3" title="Average">3 stars</label>
+            <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+            <label for="first-rate4" title="Very good">4 stars</label>
+            <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+            <label for="first-rate5" title="Amazing">5 stars</label>
+          </fieldset>
+        </div>
+
+        <div class="mb-3">
+          <label for="comment" class="form-label fw-medium">Comments</label>
+          <textarea 
+            name="review[comment]" 
+            id="comment" 
+            cols="30" 
+            rows="4" 
+            maxlength="200"
+            class="form-control border-secondary-subtle" 
+            placeholder="Write your experience here..." 
+            required
+          ></textarea>
+          <div class="form-text text-end" id="char-count">0 / 200 characters</div>
+          <div class="invalid-feedback">Please add some comments for your review.</div>
+        </div>
+        <button class="btn btn-outline-dark px-4 py-2 mt-2 w-auto align-self-start">Submit Review</button>
+      </form>
+      <% } else { %>
+        <p class="text-muted"><i>Please <a href="/login">login</a> to add a review.</i></p>
+      <% } %>
+
+
+
+     
+<div class="col-8 offset-2 mb-5">
+  <hr>
+  <h4 class="fw-semibold mb-3"><i class="bi bi-map-fill me-2"></i>Where you'll be</h4>
+  
+  <div id="map" class="rounded-3 shadow-sm border" style="height: 400px; width: 100%;"></div>
+</div>
+
+<script>
+ 
+  const locationName = "<%= listing.location %>";
+  const countryName = "<%= listing.country %>";
+  const locationTitle = "<%= listing.title %>";
+  const fullAddress = `${locationName}, ${countryName}`;
+
+  const map = L.map('map', {
+      zoomControl: true,
+      scrollWheelZoom: false 
+  }).setView([20.5937, 78.9629], 5); 
+
+  
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 20
+  }).addTo(map);
+
+  function renderMapMarker(lat, lng, title, address) {
+     
+      map.setView([lat, lng], 9); 
+      
+      const marker = L.marker([lat, lng]).addTo(map);
+      
+      marker.bindPopup(`
+          <div style="font-family: 'Plus Jakarta Sans', sans-serif; padding: 5px;">
+              <h6 style="margin: 0 0 5px 0; font-weight: 600; color: #333;">${title}</h6>
+              <p style="margin: 0; font-size: 12px; color: #666;"><i class="bi bi-geo-alt-fill" style="color: #fe424d;"></i> ${address}</p>
+          </div>
+      `).openPopup();
+  }
+
+  // ५. रिअल-टाईम अचूक पत्ता शोधणे
+  const geocodeUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}&limit=1`;
+
+  fetch(geocodeUrl)
+    .then(response => response.json())
+    .then(data => {
+      if (data && data.length > 0) {
+        renderMapMarker(parseFloat(data[0].lat), parseFloat(data[0].lon), locationTitle, fullAddress);
+      } else {
+        // फॉलबॅक: पत्ता न सापडल्यास देशाच्या नावावर शोधणे
+        const fallbackUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(countryName)}&limit=1`;
+        return fetch(fallbackUrl)
+          .then(res => res.json())
+          .then(fallbackData => {
+            if (fallbackData && fallbackData.length > 0) {
+                renderMapMarker(parseFloat(fallbackData[0].lat), parseFloat(fallbackData[0].lon), locationTitle, countryName);
+            }
+          });
+      }
+    })
+    .catch(error => console.error("Geocoding Error:", error));
+</script>
+
+      <% if (listing.reviews && listing.reviews.length > 0) { %>
+        <hr class="my-4" />
+        <h4 class="fw-semibold mb-4">All Reviews  (<%= listing.reviews.length %>)</h4>
+        
+        <div class="row row-cols-1 row-cols-md-2 g-3">
+          <% for(let review of listing.reviews) { %>
+            <div class="col">
+              <div class="card h-100 shadow-sm border border-light-subtle p-3 rounded-3">
+                <div class="card-body d-flex flex-column justify-content-between">
+                  <div>
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                      <div class="d-flex align-items-center">
+                        <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; font-size: 14px;">
+                          <i class="bi bi-person-fill"></i>
+                        </div>
+                        <h5 class="card-title mb-0 fw-bold text-capitalize">
+                          @<%= review.author?.username || "Anonymous User" %>
+                        </h5>
+                      </div>
+                      
+                      <small class="text-muted" style="font-size: 0.8rem;">
+                        <%= review.createdAt ? new Date(review.createdAt).toLocaleDateString("en-IN", {day: 'numeric', month: 'short', year: 'numeric'}) : new Date().toLocaleDateString("en-IN", {day: 'numeric', month: 'short', year: 'numeric'}) %>
+                      </small>
+                    </div>
+                    
+                    <div class="text-warning mb-2" style="font-size: 0.95rem;">
+                      <% for(let i=0; i<5; i++) { %>
+                        <i class="bi bi-star<%= i < review.rating ? '-fill' : '' %>"></i>
+                      <% } %>
+                      <span class="text-muted ms-1">(<%= review.rating %> stars)</span>
+                    </div>
+                    
+                    <p class="starability-result" data-rating="<%= review.rating %>">
+                      Rated: <%= review.rating %> stars
+                    </p>
+                    
+                    <p class="card-text text-secondary py-1"><%= review.comment %></p>
+                  </div>
+
+                  <% if(typeof currentUser !== "undefined" && currentUser && review.author && currentUser._id.equals(review.author._id)) { %>
+                  <form class="mb-1 mt-3" method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                    <button class="btn btn-sm btn-outline-danger px-3">
+                      <i class="bi bi-trash3 me-1"></i>Delete
+                    </button>
+                  </form>
+                  <% } %>
+                  
+                </div>
+              </div>
+            </div>
+          <% } %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<script>
+  const commentArea = document.getElementById("comment");
+  const charCountDisplay = document.getElementById("char-count");
+  
+  if(commentArea && charCountDisplay) {
+    commentArea.addEventListener("input", () => {
+      const currentLength = commentArea.value.length;
+      charCountDisplay.textContent = `${currentLength} / 200 characters`;
+    });
+  }
+</script>
+
+
+

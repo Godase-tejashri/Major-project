@@ -1,0 +1,349 @@
+.navbar{
+  height:5rem;
+  background-color: white;
+}
+.fa-compass{
+  color:#fe424d;
+  font-size: 2rem;
+}
+
+.nav-link{
+  color: #222222 !important;
+}
+
+.f-info-links a{
+  text-decoration: none;
+  color:#222222;
+}
+.f-info-links a:hover{
+  text-decoration: underline;
+  
+}
+
+.f-info-links,.f-info-socials,.f-info-brand{
+  width:100%;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+   
+}
+
+.f-info-socials i{
+   margin-right:1rem ;
+   font-size: 1.2rem;
+}
+
+.f-info{
+  text-align: center;
+  height: 8rem;
+  display: flex;
+  background-color: #ebebeb;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: space-evenly;
+}
+
+.listing-card{
+  border: none !important;
+  margin-bottom: 2rem;
+
+}
+
+.card-img-top{
+  border-radius: 1rem !important;
+  width: 100% !important;
+  object-fit: cover !important;
+
+}
+.card-body{
+  padding: 0 !important;
+}
+
+
+.card-text p{
+  font-weight: 400 !important;
+
+}
+
+.container{
+  flex: 1;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+
+.font-light {
+    font-weight: 300; /* Light 300 */
+}
+
+.font-regular {
+    font-weight: 400; /* Regular 400 */
+}
+
+.font-medium {
+    font-weight: 500; /* Medium 500 */
+}
+
+.font-semibold {
+    font-weight: 600; /* SemiBold 600 */
+}
+
+.listing-link{
+  text-decoration: none;;
+}
+.card-img-overlay{
+  opacity: 0  !important;
+}
+
+.card-img-overlay:hover{
+  opacity: 0.3;
+  background-color: white !important;
+
+}
+  
+.add-btn{
+  background-color: #fe424d !important;
+  border: none !important;
+}
+.edit-btn{
+  background-color: #fe424d !important;
+  border: none !important;
+}
+.show-img{
+  height: 30vh;
+}
+
+.btn{
+  display: flex;
+ 
+}
+
+
+.show-card{
+  padding-left:0 ;
+  padding-right: 0;
+}
+
+.heart-icon {
+    transition: color 0.3s;
+}
+
+
+.heart-icon.liked {
+    color: rgb(6, 5, 5) !important; 
+    font-weight: 900;
+}
+
+
+.navbar-profile-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #ddd !important;
+}
+
+.fa-user-circle {
+    font-size: 1.5rem;
+    color: #555;
+}
+
+.navbar-nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+
+.navbar-profile-box {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd !important;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.navbar-profile-box:hover {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.fa-user-circle {
+    font-size: 1.5rem;
+    color: #555;
+}
+
+/* टॉगल बॉक्सची स्टाईल */
+.tax-toggle {
+    border: 1px solid #dee2e6 !important;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+/* लेबल टेक्स्टची स्टाईल */
+.form-check-input-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #222222;
+    cursor: pointer;
+    margin-right: 15px; /* टेक्स्ट आणि स्विचमधील अंतर */
+}
+
+/* बूटस्ट्रॅपचा मूळ निळा रंग बदलून एअरबीएनबी सारखा काळा करण्यासाठी */
+.form-check-input:checked {
+    background-color: #222222 !important;
+    border-color: #222222 !important;
+}
+
+.form-check-input {
+    cursor: pointer;
+    width: 2.5em !important; /* स्विच थोडा मोठा दिसेल */
+    height: 1.5em !important;
+}
+
+.scroll-btn-right {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0px 1px 4px rgba(0,0,0,0.1);
+    transition: 0.2s ease;
+    flex-shrink: 0;
+    margin-left: auto; /* फिल्टर्स संपल्यावर उजवीकडे ढकलण्यासाठी */
+  }
+
+  .scroll-btn-right:hover {
+    background: #ffffff;
+    transform: scale(1.05);
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+  }
+
+  .scroll-btn-right i {
+    font-size: 0.75rem;
+    color: #222222;
+  }
+
+  /* अ‍ॅक्टिव्ह फिल्टर स्टाईल */
+  .active-filter {
+    color: #222222 !important;
+    border-bottom: 2px solid #222222 !important; 
+    font-weight: 600;
+  }
+
+  /* 🟢 टॅक्स टॉगल बॉक्सची एअरबीएनबी स्टाईल */
+  .tax-toggle {
+    border: 1px solid #e0e0e0 !important;
+    height: 3.2rem;
+    border-radius: 12px !important; /* बॉक्स कॉर्नर्स थोडे स्क्वेअरिश-राऊंड */
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    flex-shrink: 0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+  }
+
+  .form-check-input-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #222222;
+    cursor: pointer;
+    margin-right: 12px;
+  }
+
+  .form-check-input {
+    cursor: pointer;
+  }
+
+  .form-check-input:checked {
+    background-color: #222222 !important;
+    border-color: #222222 !important;
+  }
+
+
+
+
+
+
+
+
+/* सर्च कंटेनर रचना */
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* मुख्य कॅप्सूल बार (बॉर्डर आणि शॅडो) */
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 20px; /* पूर्ण कॅप्सूल आकार */
+  padding: 6px 6px 6px 20px; /* डावीकडे टेक्स्टसाठी योग्य अंतर */
+  box-shadow: 0px 1px 2px rgba(0,0,0,0.08), 0px 4px 12px rgba(0,0,0,0.05);
+  transition: box-shadow 0.2s ease;
+}
+
+.search-bar:hover {
+  box-shadow: 0px 2px 4px rgba(0,0,0,0.18);
+}
+
+/* इनपुट बॉक्सची स्टाईल */
+.search-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.95rem;
+  font-weight: 200;
+  color: #222222;
+  width: 220px; /* योग्य रुंदी */
+}
+
+.search-input::placeholder {
+  color: #717171;
+  opacity: 0.9;
+}
+
+/* 🔴 स्क्रीनशॉट सारखे लाल रंगाचे वळणदार 'Search' बटण */
+.search-action-btn {
+  background-color: #ff385c; /* एअरबीएनबी ब्रँड कलर */
+  color: #ffffff !important;
+  border: none;
+  padding: 10px 22px; /* बटण लांब आणि सुबक दिसण्यासाठी */
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 24px; /* बटणाचे कोपरे गोल करण्यासाठी */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  margin-left: 10px;
+}
+
+.search-action-btn:hover {
+  background-color: #e61e4d;
+}
+
+.search-action-btn:active {
+  transform: scale(0.98); /* क्लिक केल्यावर हलका दाबल्याचा इफेक्ट */
+}
+
+/* आयकॉन आणि टेक्स्ट मधील अंतर सुनिश्चित करणे */
+.search-action-btn i {
+  font-size: 0.85rem;
+  margin-right: 8px; /* आयकॉनच्या पुढे अंतर */
+}

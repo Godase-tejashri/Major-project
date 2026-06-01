@@ -1,0 +1,701 @@
+<!-- 
+
+<% layout("/layouts/boilerplate") %>
+<% 
+  if (typeof currentCategory === 'undefined') { 
+      var currentCategory = ""; 
+  } 
+%>
+
+<style>
+  /* Clean styling for clickable layout cards */
+  .listing-link {
+    text-decoration: none;
+    color: inherit;
+  }
+  .listing-card {
+    transition: transform 0.2s ease-in-out;
+    background-color: #fff;
+  }
+  .listing-card:hover {
+    transform: scale(1.02);
+    cursor: pointer;
+  }
+  .card-img-top {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 0.75rem !important;
+    transition: opacity 0.2s ease-in-out;
+  }
+  .listing-card:hover .card-img-top {
+    opacity: 0.82; 
+  }
+
+  /* फिल्टर्सचा मुख्य रॅपर */
+  .filters-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1.5rem 0; 
+    padding: 0 55px; 
+    width: 100%;
+  }
+
+  /* आयकॉन्सची स्क्रोल होणारी ओळ */
+  #filters {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap; 
+    align-items: center;
+    overflow-x: auto;
+    width: 100%;       
+    gap: 2rem;
+    flex-grow: 1;
+    scroll-behavior: smooth;
+  }
+
+  /* स्क्रोलबार लपवण्यासाठी */
+  #filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* प्रत्येक सिंगल फिल्टर आयटम */
+  .filter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: #717171 !important; /* एअरबीएनबीचा ओरिजिनल ग्रे रंग */
+    border-bottom: 2px solid transparent;
+    padding-bottom: 6px;
+    min-width: fit-content;
+  }
+
+  .filter:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+
+  .filter i {
+    font-size: 1.4rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .filter p {
+    font-size: 0.75rem;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+    z-index: 100;
+    transition: 0.2s ease;
+  }
+
+  .scroll-btn:hover {
+    background: #f7f7f7;
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .btn-left { left: 5px; }
+  .btn-right { right: 5px; }
+
+  .active-filter {
+    opacity: 1 !important;
+    border-bottom: 2px solid #222222 !important; 
+    padding-bottom: 3px;
+    font-weight: 600;
+  }
+
+  .active-filter i {
+    color: #222222 !important; 
+  }
+</style>
+
+<div class="container mt-2">
+
+  <div class="filters-wrapper ">
+    
+    <button class="scroll-btn btn-left" onclick="scrollFilters(-1)">
+       <i class="fa-solid fa-angles-left"></i>
+    </button>
+
+    <div id="filters">
+      <a href="/listings?category=trending" class="filter">
+         <i class="fa-solid fa-fire"></i>
+         <p>Trending</p>
+      </a>
+
+      <a href="/listings?category=rooms" class="filter">
+         <i class="fa-solid fa-bed"></i>
+         <p>Rooms</p>
+      </a>
+
+      <a href="/listings?category=cities" class="filter <%= currentCategory === 'cities' ? 'active-filter' : '' %>">
+         <div><i class="fa-solid fa-mountain-city"></i></div>
+         <p>Iconic cities</p>
+      </a>
+
+      <a href="/listings?category=mountains" class="filter <%= currentCategory === 'mountains' ? 'active-filter' : '' %>">
+         <div><i class="fa-solid fa-mountain"></i></div>
+         <p>Mountains</p>
+      </a>
+
+      <a href="/listings?category=pools" class="filter <%= currentCategory === 'pools' ? 'active-filter' : '' %>">
+         <div><i class="fa-solid fa-person-swimming"></i></div>
+         <p>Amazing pools</p>
+      </a>
+
+      <a href="/listings?category=castles" class="filter <%= currentCategory === 'castles' ? 'active-filter' : '' %>">
+         <div><i class="fa-brands fa-fort-awesome"></i></div>
+         <p>Castles</p>
+      </a>
+
+      <a href="/listings?category=camping" class="filter <%= currentCategory === 'camping' ? 'active-filter' : '' %>">
+         <div><i class="fa-solid fa-campground"></i></div>
+         <p>Camping</p>
+      </a>
+
+      <a href="/listings?category=farms" class="filter <%= currentCategory === 'farms' ? 'active-filter' : '' %>">
+         <div><i class="fa-solid fa-building-wheat"></i></div>
+         <p>Farms</p>
+      </a>
+
+      <a href="/listings?category=lakefront" class="filter <%= currentCategory === 'lakefront' ? 'active-filter' : '' %>">
+         <div><i class="fa-solid fa-place-of-worship"></i></div>
+         <p>Lakefront</p>
+      </a>
+
+      <a href="/listings?category=arctic" class="filter <%= currentCategory === 'arctic' ? 'active-filter' : '' %>">
+         <div><i class="fa-solid fa-snowflake"></i></div>
+         <p>Arctic</p>
+      </a>
+
+      <div class="filter">
+          <i class="fa-solid fa-umbrella-beach"></i>
+          <p>Beachfront</p>
+      </div>
+
+      <a href="/listings?category=desert" class="filter <%= currentCategory === 'desert' ? 'active-filter' : '' %>">
+         <div><i class="fa-solid fa-sun"></i></div>
+         <p>Deserts</p>
+      </a>
+
+      <a href="/listings?category=historical" class="filter <%= currentCategory === 'historical' ? 'active-filter' : '' %>">
+         <div><i class="fa-solid fa-building-columns"></i></div>
+         <p>Historical</p>
+      </a>
+
+      <a href="/listings?category=islands" class="filter <%= currentCategory === 'islands' ? 'active-filter' : '' %>">
+         <div><i class="fa-solid fa-earth-oceania"></i></div>
+         <p>Islands</p>
+      </a>
+    </div>
+
+      <button class="scroll-btn btn-right" onclick="scrollFilters(1)">
+       <i class="fa-solid fa-angles-right"></i>
+    </button>
+
+    <div class="tax-toggle border rounded-pill p-3 ms-auto d-flex align-items-center">
+      <div class="form-check form-switch form-check-reverse m-0">
+          <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+          <label class="form-check-input-label" for="flexSwitchCheckDefault">Display total before taxes</label>
+      </div>
+    </div>
+
+
+    
+  </div> 
+
+  <hr class="mt-0 mb-4" style="opacity: 0.15;"> 
+
+  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 g-4">
+    <% for(let listing of allListings) { %>
+      <div class="col">
+        <a href="/listings/<%= listing._id %>" class="listing-link">
+
+          <div class="card-img-wrapper" style="position: relative;">
+            <img src="<%= listing.image.url %>" class="card-img-top" style="height: 20rem;" alt="listing_image">
+            <i class="fa-regular fa-heart heart-icon" data-id="<%= listing._id %>" onclick="toggleLike(event)" style="position: absolute; top: 15px; right: 15px; font-size: 24px; color: rgb(255, 255, 255); cursor: pointer; z-index: 10;"></i>
+          </div>
+
+          <div class="card h-100 border-0 listing-card bg-transparent">
+            <div class="card-body px-1 pt-2">
+              <h5 class="card-title fw-bold text-dark mb-1"><%= listing.title %></h5>
+              
+              <p class="card-text text-dark fw-semibold mb-1">
+                &#8377; <%= listing.price.toLocaleString("en-IN") %> 
+                <span class="fw-normal text-muted" style="font-size: 0.9rem;">/ night</span>
+                <i class="tax-info text-muted d-none">&nbsp; &nbsp;+18% GST</i>
+              </p>
+              
+              <p class="card-text text-secondary small text-truncate mb-2">
+                <%= listing.description %>
+              </p>
+              
+              <span class="text-primary fw-medium small">
+                View Details <i class="bi bi-arrow-right ms-1"></i>
+              </span>
+            </div>
+          </div>
+        </a>
+      </div>
+    <% } %>
+  </div>
+
+</div> 
+
+<script>
+  function scrollFilters(direction) {
+    const filtersContainer = document.getElementById("filters");
+    const scrollAmount = 300; 
+    
+    filtersContainer.scrollBy({
+      left: direction * scrollAmount,
+      behavior: 'smooth'
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+      // १. हार्ट आयकॉन (Like) स्टेट रिस्टोर करणे
+      document.querySelectorAll('.heart-icon').forEach(icon => {
+          let listingId = icon.getAttribute('data-id');
+          if (localStorage.getItem('liked_' + listingId) === 'true') {
+              icon.classList.add('fa-solid', 'liked');
+              icon.classList.remove('fa-regular');
+          }
+      });
+
+      // २. टॅक्स टॉगल स्टेट रिस्टोर करणे (रिफ्रेश-प्रूफ)
+      let taxSwitch = document.getElementById("flexSwitchCheckDefault");
+      let taxInfo = document.getElementsByClassName("tax-info");
+
+      if (localStorage.getItem("tax_switch") === "true") {
+          taxSwitch.checked = true;
+          for (let info of taxInfo) {
+              info.classList.remove("d-none");
+          }
+      }
+
+      // टॉगल स्विच क्लिक इव्हेंट
+      taxSwitch.addEventListener("click", () => {
+          for (let info of taxInfo) {
+              if (taxSwitch.checked) {
+                  info.classList.remove("d-none");
+              } else {
+                  info.classList.add("d-none");
+              }
+          }
+          localStorage.setItem("tax_switch", taxSwitch.checked);
+      });
+  });
+
+  // हार्ट लाईक टॉगल फंक्शन
+  function toggleLike(event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      let icon = event.target;
+      let listingId = icon.getAttribute('data-id');
+      
+      icon.classList.toggle('fa-solid');
+      icon.classList.toggle('fa-regular');
+      icon.classList.toggle('liked');
+
+      if (icon.classList.contains('liked')) {
+          localStorage.setItem('liked_' + listingId, 'true');
+      } else {
+          localStorage.removeItem('liked_' + listingId);
+      }
+  }
+</script>  -->
+
+
+
+
+
+
+
+
+
+<% layout("/layouts/boilerplate") %>
+<% 
+  if (typeof currentCategory === 'undefined') { 
+      var currentCategory = ""; 
+  } 
+%>
+
+<style>
+  /* Clean styling for clickable layout cards */
+  .listing-link {
+    text-decoration: none;
+    color: inherit;
+  }
+  .listing-card {
+    transition: transform 0.2s ease-in-out;
+    background-color: #fff;
+  }
+  .listing-card:hover {
+    transform: scale(1.02);
+    cursor: pointer;
+  }
+  .card-img-top {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 0.75rem !important;
+    transition: opacity 0.2s ease-in-out;
+  }
+  .listing-card:hover .card-img-top {
+    opacity: 0.82; 
+  }
+
+  /* 🟢 फिल्टर्सचा मुख्य रॅपर - जो घटकांना एका ओळीत व्यवस्थापित करतो */
+  .filters-wrapper {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0; 
+    width: 100%;
+    gap: 1rem; /* घटकांमधील अचूक अंतर */
+  }
+
+  /* 🟢 आयकॉन्सची स्क्रोल होणारी ओळ */
+  #filters {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap; 
+    align-items: center;
+    overflow-x: auto;
+    flex-grow: 1;
+    scroll-behavior: smooth;
+    gap: 2rem;
+  }
+
+  /* स्क्रोलबार लपवण्यासाठी */
+  #filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* प्रत्येक सिंगल फिल्टर आयटम */
+  .filter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: #717171 !important; 
+    border-bottom: 2px solid transparent;
+    padding-bottom: 6px;
+    min-width: fit-content;
+  }
+
+  .filter:hover {
+    color: #222222 !important;
+    border-bottom: 2px solid #b0b0b0;
+  }
+
+  .filter i {
+    font-size: 1.4rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .filter p {
+    font-size: 0.75rem;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  /* 🟢 डावा स्क्रोल बटण स्टाईल */
+  .scroll-btn-left {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0px 1px 4px rgba(0,0,0,0.15);
+    flex-shrink: 0;
+    margin-right: 0.5rem;
+    transition: 0.2s ease;
+  }
+
+  /* 🟢 उजवा स्क्रोल बटण स्टाईल - याला absolute वरून काढून साधे फ्लेक्स केले */
+  .scroll-btn-right {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0px 1px 4px rgba(0,0,0,0.15);
+    flex-shrink: 0;
+    transition: 0.2s ease;
+  }
+
+  .scroll-btn-left:hover, .scroll-btn-right:hover {
+    background: #f7f7f7;
+    transform: scale(1.05);
+  }
+
+  .scroll-btn-left i, .scroll-btn-right i {
+    font-size: 0.75rem;
+    color: #222222;
+  }
+
+  .active-filter {
+    color: #222222 !important;
+    border-bottom: 2px solid #222222 !important; 
+    font-weight: 600;
+  }
+
+  /* 🟢 टॅक्स टॉगल बॉक्स स्टाईल - जो आता फिल्टर्स संपल्यावर पहिली जागा घेईल */
+  .tax-toggle {
+    border: 1px solid #b0b0b0 !important;
+    height: 3.1rem;
+    border-radius: 12px !important;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    flex-shrink: 0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    margin-left: auto; /* 👈 यामुळे टॉगल बॉक्स आणि उजवा अ‍ॅरो थेट उजव्या कोपऱ्यात ढकलले जातील */
+  }
+
+  .form-check-input-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #222222;
+    cursor: pointer;
+    margin-right: 12px;
+  }
+  
+  .form-check-input {
+    cursor: pointer;
+  }
+</style>
+
+<div class="container mt-2">
+
+  <div class="filters-wrapper">
+    
+    <button class="scroll-btn-left" onclick="scrollFilters(-1)">
+        <i class="fa-solid fa-chevron-left"></i>
+    </button>
+
+    <div id="filters">
+      <a href="/listings?category=trending" class="filter">
+         <i class="fa-solid fa-fire"></i>
+         <p>Trending</p>
+      </a>
+
+      <a href="/listings?category=rooms" class="filter">
+         <i class="fa-solid fa-bed"></i>
+         <p>Rooms</p>
+      </a>
+
+      <a href="/listings?category=cities" class="filter <%= currentCategory === 'cities' ? 'active-filter' : '' %>">
+         <div><i class="fa-solid fa-mountain-city"></i></div>
+         <p>Iconic cities</p>
+      </a>
+
+      <a href="/listings?category=mountains" class="filter <%= currentCategory === 'mountains' ? 'active-filter' : '' %>">
+         <div><i class="fa-solid fa-mountain"></i></div>
+         <p>Mountains</p>
+      </a>
+
+      <a href="/listings?category=pools" class="filter <%= currentCategory === 'pools' ? 'active-filter' : '' %>">
+         <div><i class="fa-solid fa-person-swimming"></i></div>
+         <p>Amazing pools</p>
+      </a>
+
+      <a href="/listings?category=castles" class="filter <%= currentCategory === 'castles' ? 'active-filter' : '' %>">
+         <div><i class="fa-brands fa-fort-awesome"></i></div>
+         <p>Castles</p>
+      </a>
+
+      <a href="/listings?category=camping" class="filter <%= currentCategory === 'camping' ? 'active-filter' : '' %>">
+         <div><i class="fa-solid fa-campground"></i></div>
+         <p>Camping</p>
+      </a>
+
+      <a href="/listings?category=farms" class="filter <%= currentCategory === 'farms' ? 'active-filter' : '' %>">
+         <div><i class="fa-solid fa-building-wheat"></i></div>
+         <p>Farms</p>
+      </a>
+
+      <a href="/listings?category=lakefront" class="filter <%= currentCategory === 'lakefront' ? 'active-filter' : '' %>">
+         <div><i class="fa-solid fa-place-of-worship"></i></div>
+         <p>Lakefront</p>
+      </a>
+
+      <a href="/listings?category=arctic" class="filter <%= currentCategory === 'arctic' ? 'active-filter' : '' %>">
+         <div><i class="fa-solid fa-snowflake"></i></div>
+         <p>Arctic</p>
+      </a>
+
+      <div class="filter">
+          <i class="fa-solid fa-umbrella-beach"></i>
+          <p>Beachfront</p>
+      </div>
+
+      <a href="/listings?category=desert" class="filter <%= currentCategory === 'desert' ? 'active-filter' : '' %>">
+         <div><i class="fa-solid fa-sun"></i></div>
+         <p>Deserts</p>
+      </a>
+
+      <a href="/listings?category=historical" class="filter <%= currentCategory === 'historical' ? 'active-filter' : '' %>">
+         <div><i class="fa-solid fa-building-columns"></i></div>
+         <p>Historical</p>
+      </a>
+
+      <a href="/listings?category=islands" class="filter <%= currentCategory === 'islands' ? 'active-filter' : '' %>">
+         <div><i class="fa-solid fa-earth-oceania"></i></div>
+         <p>Islands</p>
+      </a>
+    </div>
+
+     <button class="scroll-btn-right" onclick="scrollFilters(1)">
+       <i class="fa-solid fa-chevron-right"></i>
+    </button>
+
+    <div class="tax-toggle border m-0">
+      <div class="form-check form-switch form-check-reverse m-0">
+          <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+          <label class="form-check-input-label" for="flexSwitchCheckDefault">Display total before taxes</label>
+      </div>
+    </div>
+
+    <!-- <button class="scroll-btn-right" onclick="scrollFilters(1)">
+       <i class="fa-solid fa-chevron-right"></i>
+    </button> -->
+    
+  </div> 
+
+  <hr class="mt-0 mb-4" style="opacity: 0.15;"> 
+
+  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 g-4">
+    <% for(let listing of allListings) { %>
+      <div class="col">
+        <a href="/listings/<%= listing._id %>" class="listing-link">
+
+          <div class="card-img-wrapper" style="position: relative;">
+            <img src="<%= listing.image.url %>" class="card-img-top" style="height: 20rem;" alt="listing_image">
+            <i class="fa-regular fa-heart heart-icon" data-id="<%= listing._id %>" onclick="toggleLike(event)" style="position: absolute; top: 15px; right: 15px; font-size: 24px; color: rgb(255, 255, 255); cursor: pointer; z-index: 10;"></i>
+          </div>
+
+          <div class="card h-100 border-0 listing-card bg-transparent">
+            <div class="card-body px-1 pt-2">
+              <h5 class="card-title fw-bold text-dark mb-1"><%= listing.title %></h5>
+              
+              <p class="card-text text-dark fw-semibold mb-1">
+                &#8377; <%= listing.price.toLocaleString("en-IN") %> 
+                <span class="fw-normal text-muted" style="font-size: 0.9rem;">/ night</span>
+                <i class="tax-info text-muted d-none">&nbsp; &nbsp;+18% GST</i>
+              </p>
+              
+              <p class="card-text text-secondary small text-truncate mb-2">
+                <%= listing.description %>
+              </p>
+              
+              <span class="text-primary fw-medium small">
+                View Details <i class="bi bi-arrow-right ms-1"></i>
+              </span>
+            </div>
+          </div>
+        </a>
+      </div>
+    <% } %>
+  </div>
+
+</div> 
+
+<script>
+  function scrollFilters(direction) {
+    const filtersContainer = document.getElementById("filters");
+    const scrollAmount = 300; 
+    
+    filtersContainer.scrollBy({
+      left: direction * scrollAmount,
+      behavior: 'smooth'
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+      // १. हार्ट आयकॉन (Like) स्टेट रिस्टोर करणे
+      document.querySelectorAll('.heart-icon').forEach(icon => {
+          let listingId = icon.getAttribute('data-id');
+          if (localStorage.getItem('liked_' + listingId) === 'true') {
+              icon.classList.add('fa-solid', 'liked');
+              icon.classList.remove('fa-regular');
+          }
+      });
+
+      // २. टॅक्स टॉगल स्टेट रिस्टोर करणे
+      let taxSwitch = document.getElementById("flexSwitchCheckDefault");
+      let taxInfo = document.getElementsByClassName("tax-info");
+
+      if (localStorage.getItem("tax_switch") === "true") {
+          taxSwitch.checked = true;
+          for (let info of taxInfo) {
+              info.classList.remove("d-none");
+          }
+      }
+
+      taxSwitch.addEventListener("click", () => {
+          for (let info of taxInfo) {
+              if (taxSwitch.checked) {
+                  info.classList.remove("d-none");
+              } else {
+                  info.classList.add("d-none");
+              }
+          }
+          localStorage.setItem("tax_switch", taxSwitch.checked);
+      });
+  });
+
+  function toggleLike(event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      let icon = event.target;
+      let listingId = icon.getAttribute('data-id');
+      
+      icon.classList.toggle('fa-solid');
+      icon.classList.toggle('fa-regular');
+      icon.classList.toggle('liked');
+
+      if (icon.classList.contains('liked')) {
+          localStorage.setItem('liked_' + listingId, 'true');
+      } else {
+          localStorage.removeItem('liked_' + listingId);
+      }
+  }
+</script>
