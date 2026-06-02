@@ -59,37 +59,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 
 
-// const store = MongoStore.create({
-//   mongoUrl: dburl,
-//   touchAfter: 24 * 3600, // 24 hours
-//   crypto: {
-//     secret: "mysupersecretcode!"
-//   }
-// });
-
-
-
-
-
-
-
-
-
-
-// const store = MongoStore.create({
-//   mongoUrl: "mongodb://127.0.0.1:27017/wanderlust", // थेट लोकल डेटाबेस पाथ
-//   touchAfter: 24 * 3600, // 24 hours
-//   crypto: {
-//     secret: "mysupersecretcode!"
-//   }
-// });
-
-// store.on("error", function (e) {
-//   console.log("Session Store Error: ", e);
-// });
-
-
-
 
 
 
@@ -109,14 +78,6 @@ const store = MongoStore.default ? MongoStore.default.create({
 store.on("error", function (e) {
   console.log("Session Store Error: ", e);
 });
-
-
-
-
-
-
-
-
 
 
 
@@ -146,13 +107,9 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 // ==================== LOCAL VARIABLES MIDDLEWARE ====================
-// इथे आपण सर्व संभाव्य नावे एकत्र सेट करत आहोत जेणेकरून कोणत्याही EJS फाईलमध्ये एरर येणार नाही!
 app.use((req, res, next) => {
-    // युजरसाठी दोन्ही नावे सेट केली (काही फाईल्समध्ये currUser आहे तर काहींमध्ये currentUser)
     res.locals.currUser = req.user; 
     res.locals.currentUser = req.user; 
-
-    // फ्लॅश मेसेजसाठी दोन्ही नावे सेट केली (success आणि successMsg दोन्ही चालतील)
     const successMessages = req.flash("success");
     const errorMessages = req.flash("error");
 
@@ -166,10 +123,10 @@ app.use((req, res, next) => {
 });
 
 // ==================== CORE APPLICATION ROUTES ====================
-// सर्व राऊट्स आता मिडलवेअरच्या खाली आहेत (योग्य क्रम)
- app.use("/", userRouter);
-
-
+app.get("/", (req, res) => {
+    res.redirect("/listings");
+});
+app.use("/", userRouter);
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewsRouter);
 
