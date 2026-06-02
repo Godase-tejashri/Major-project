@@ -167,10 +167,8 @@ app.use((req, res, next) => {
 
 // ==================== CORE APPLICATION ROUTES ====================
 // सर्व राऊट्स आता मिडलवेअरच्या खाली आहेत (योग्य क्रम)
-// app.use("/", userRouter);
-app.get("/", (req, res) => {
-    res.redirect("/listings");
-});
+ app.use("/", userRouter);
+
 
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewsRouter);
