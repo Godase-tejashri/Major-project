@@ -98,13 +98,13 @@ app.use(express.static(path.join(__dirname, "public")));
 
 
 const store = MongoStore.default ? MongoStore.default.create({
-  mongoUrl: "mongodb://127.0.0.1:27017/wanderlust",
+  mongoUrl: dburl,
   touchAfter: 24 * 3600,
   crypto: {
-    secret: "mysupersecretcode!"
+    secret: process.env.SECRETE ||"mysupersecretcode!"
   }
 }) : MongoStore.create({
-  mongoUrl: "mongodb://127.0.0.1:27017/wanderlust",
+  mongoUrl: dburl,
   touchAfter: 24 * 3600,
   crypto: {
     secret: process.env.SECRETE || "mysupersecretcode!"}
